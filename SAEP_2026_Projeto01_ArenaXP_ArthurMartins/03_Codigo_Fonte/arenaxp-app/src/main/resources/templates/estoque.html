@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Gestão de Estoque - ArenaXP</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<header th:replace="~{fragments :: cabecalho('estoque')}"></header>
+
+<main class="container">
+    <h1>Gestão de Estoque</h1>
+    <div th:replace="~{fragments :: mensagens}"></div>
+
+    <!-- Registro de Entrada / Saída (RF05 e RF06) -->
+    <section class="card" id="form-movimentacao">
+        <h2>Registrar movimentação</h2>
+        <form th:action="@{/estoque/movimentar}" method="post">
+            <div class="form-grid">
+                <div>
+                    <label for="equipamentoId">Equipamento *</label>
+                    <select id="equipamentoId" name="equipamentoId" required>
+                        <option value="">Selecione...</option>
+                        <option th:each="e : ${equipamentos}" th:value="${e.id}"
+                                th:text="${e.nome + ' (saldo: ' + e.quantidadeAtual + ')'}"
+                                th:selected="${equipamentoSelecionado != null and equipamentoSelecionado == e.id}">Equipamento</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="tipo">Tipo *</label>
+                    <select id="tipo" name="tipo" required>
+                        <option th:each="t : ${tipos}" th:value="${t}" th:text="${t}">ENTRADA</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="quantidade">Quantidade *</label>
+                    <input type="number" id="quantidade" name="quantidade" min="1" required>
+                </div>
+                <div>
+                    <label for="dataHora">Data/hora (vazio = agora)</label>
+                    <input type="datetime-local" id="dataHora" name="dataHora">
+                </div>
+                <div class="full">
+                    <label for="observacao">Observação do evento / torneio</label>
+                    <input type="text" id="observacao" name="observacao" maxlength="255"
+                           placeholder="Ex.: Copa Universitária FPS - Palco A">
+                </div>
+            </div>
+            <div class="acoes">
+                <button type="submit" class="btn">Registrar movimentação</button>
+            </div>
+        </form>
+    </section>
+
+    <!-- Listagem em ordem alfabética A-Z (RF04) -->
+    <section class="card">
+        <h2>Equipamentos em estoque (A–Z)</h2>
+        <div class="table-wrap">
+            <table id="tabela-estoque">
+                <thead>
+                <tr>
+                    <th>Nome</th>
+                    <th>Patrimônio</th>
+                    <th>Categoria</th>
+                    <th class="num">Qtd. atual</th>
+                    <th class="num">Estoque mín.</th>
+                    <th>Status</th>
+                    <th>Ação</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="e : ${equipamentos}" th:classappend="${e.critico} ? 'linha-critica'">
+                    <td th:text="${e.nome}">Nome</td>
+                    <td th:text="${e.codigoPatrimonio}">AXP-001</td>
+                    <td th:text="${e.categoria}">Categoria</td>
+                    <td class="num" th:text="${e.quantidadeAtual}">0</td>
+                    <td class="num" th:text="${e.estoqueMinimo}">0</td>
+                    <td>
+                        <span class="badge badge-critico" th:if="${e.critico}">CRÍTICO</span>
+                        <span class="badge badge-ok" th:unless="${e.critico}">OK</span>
+                    </td>
+                    <td>
+                        <a th:href="@{/estoque(equipamentoId=${e.id})}" class="btn btn-sec btn-sm">Movimentar</a>
+                    </td>
+                </tr>
+                <tr th:if="${#lists.isEmpty(equipamentos)}">
+                    <td colspan="7" class="vazio">Nenhum equipamento cadastrado.</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+</main>
+</body>
+</html>

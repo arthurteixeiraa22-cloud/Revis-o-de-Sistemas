@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Início - ArenaXP</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<header th:replace="~{fragments :: cabecalho('dashboard')}"></header>
+
+<main class="container">
+    <h1>Bem-vindo(a), <span th:text="${nomeUsuario}">Usuário</span>!</h1>
+    <div th:replace="~{fragments :: mensagens}"></div>
+
+    <section class="grid-cards">
+        <div class="stat">
+            <div class="num" th:text="${totalEquipamentos}">0</div>
+            <div class="label">Equipamentos cadastrados</div>
+        </div>
+        <div class="stat" th:classappend="${totalCriticos > 0} ? 'critico'">
+            <div class="num" th:text="${totalCriticos}">0</div>
+            <div class="label">Itens em alerta crítico</div>
+        </div>
+        <div class="stat">
+            <div class="num" th:text="${totalMovimentacoes}">0</div>
+            <div class="label">Movimentações registradas</div>
+        </div>
+    </section>
+
+    <section class="card">
+        <h2>Itens com estoque crítico / abaixo do mínimo</h2>
+        <div class="table-wrap">
+            <table>
+                <thead>
+                <tr>
+                    <th>Patrimônio</th>
+                    <th>Equipamento</th>
+                    <th class="num">Saldo</th>
+                    <th class="num">Mínimo</th>
+                    <th>Status</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="e : ${criticos}" class="linha-critica">
+                    <td th:text="${e.codigoPatrimonio}">AXP-001</td>
+                    <td th:text="${e.nome}">Nome</td>
+                    <td class="num" th:text="${e.quantidadeAtual}">0</td>
+                    <td class="num" th:text="${e.estoqueMinimo}">0</td>
+                    <td><span class="badge badge-critico">CRÍTICO</span></td>
+                </tr>
+                <tr th:if="${#lists.isEmpty(criticos)}">
+                    <td colspan="5" class="vazio">Nenhum item em alerta. Estoque saudável!</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+</main>
+</body>
+</html>

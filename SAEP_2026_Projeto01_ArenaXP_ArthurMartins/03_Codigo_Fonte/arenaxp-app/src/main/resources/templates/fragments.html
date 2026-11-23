@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<!-- Cabeçalho com navegação, nome do usuário logado e botão Sair (RF01) -->
+<header th:fragment="cabecalho(ativo)" class="topbar">
+    <a class="brand" th:href="@{/}">Arena<span>XP</span></a>
+    <nav class="nav">
+        <a th:href="@{/}" th:classappend="${ativo == 'dashboard'} ? 'ativo'">Início</a>
+        <a th:href="@{/equipamentos}" th:classappend="${ativo == 'equipamentos'} ? 'ativo'">Equipamentos</a>
+        <a th:href="@{/estoque}" th:classappend="${ativo == 'estoque'} ? 'ativo'">Gestão de Estoque</a>
+        <a th:href="@{/movimentacoes}" th:classappend="${ativo == 'movimentacoes'} ? 'ativo'">Movimentações</a>
+    </nav>
+    <div class="user-box">
+        <span>Técnico: <strong id="usuario-logado" th:text="${nomeUsuario}">Usuário</strong></span>
+        <form th:action="@{/logout}" method="post">
+            <button type="submit" class="btn btn-sec btn-sm">Sair</button>
+        </form>
+    </div>
+</header>
+
+<!-- Mensagens de feedback (sucesso / erro / alerta de estoque crítico) -->
+<div th:fragment="mensagens">
+    <div class="alerta-critico" th:if="${alerta != null}" role="alert">
+        &#9888; <span th:text="${alerta}">ESTOQUE CRÍTICO / ABAIXO DO MÍNIMO</span>
+    </div>
+    <div class="msg msg-sucesso" th:if="${sucesso != null}" th:text="${sucesso}">Sucesso</div>
+    <div class="msg msg-erro" th:if="${erro != null}" th:text="${erro}">Erro</div>
+</div>
+
+</body>
+</html>

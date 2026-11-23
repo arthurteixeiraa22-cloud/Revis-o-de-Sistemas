@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Equipamentos - ArenaXP</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<header th:replace="~{fragments :: cabecalho('equipamentos')}"></header>
+
+<main class="container">
+    <h1>Equipamentos</h1>
+    <div th:replace="~{fragments :: mensagens}"></div>
+
+    <section class="card">
+        <form th:action="@{/equipamentos}" method="get" class="filtros">
+            <div>
+                <label for="busca">Buscar por nome ou patrimônio</label>
+                <input type="text" id="busca" name="busca" th:value="${busca}" placeholder="Ex.: headset ou AXP-MSE-001">
+            </div>
+            <div>
+                <label for="categoria">Categoria</label>
+                <select id="categoria" name="categoria">
+                    <option value="">Todas</option>
+                    <option th:each="c : ${categorias}" th:value="${c}" th:text="${c}"
+                            th:selected="${c == categoriaSelecionada}">Categoria</option>
+                </select>
+            </div>
+            <button type="submit" class="btn">Filtrar</button>
+            <a th:href="@{/equipamentos}" class="btn btn-sec">Limpar</a>
+        </form>
+    </section>
+
+    <section class="card">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:.75rem;">
+            <h2 style="margin:0;">Lista de equipamentos</h2>
+            <a th:href="@{/equipamentos/novo}" class="btn">+ Novo equipamento</a>
+        </div>
+        <div class="table-wrap">
+            <table>
+                <thead>
+                <tr>
+                    <th>Patrimônio</th>
+                    <th>Nome</th>
+                    <th>Categoria</th>
+                    <th>Especificação</th>
+                    <th class="num">Qtd.</th>
+                    <th class="num">Mín.</th>
+                    <th>Ações</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="e : ${equipamentos}">
+                    <td th:text="${e.codigoPatrimonio}">AXP-001</td>
+                    <td th:text="${e.nome}">Nome</td>
+                    <td th:text="${e.categoria}">Categoria</td>
+                    <td th:text="${e.especificacaoTecnica}">Spec</td>
+                    <td class="num" th:text="${e.quantidadeAtual}">0</td>
+                    <td class="num" th:text="${e.estoqueMinimo}">0</td>
+                    <td class="acoes-td">
+                        <a th:href="@{/equipamentos/{id}/editar(id=${e.id})}" class="btn btn-sec btn-sm">Editar</a>
+                        <form th:action="@{/equipamentos/{id}/excluir(id=${e.id})}" method="post"
+                              onsubmit="return confirm('Deseja realmente excluir este equipamento?');">
+                            <button type="submit" class="btn btn-danger btn-sm">Excluir</button>
+                        </form>
+                    </td>
+                </tr>
+                <tr th:if="${#lists.isEmpty(equipamentos)}">
+                    <td colspan="7" class="vazio">Nenhum equipamento encontrado.</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+</main>
+</body>
+</html>

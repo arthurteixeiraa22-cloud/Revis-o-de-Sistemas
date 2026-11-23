@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Movimentações - ArenaXP</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<header th:replace="~{fragments :: cabecalho('movimentacoes')}"></header>
+
+<main class="container">
+    <h1>Histórico de Movimentações</h1>
+    <div th:replace="~{fragments :: mensagens}"></div>
+
+    <section class="card">
+        <div class="table-wrap">
+            <table>
+                <thead>
+                <tr>
+                    <th>Data/hora</th>
+                    <th>Equipamento</th>
+                    <th>Tipo</th>
+                    <th class="num">Qtd.</th>
+                    <th>Observação</th>
+                    <th>Técnico</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="m : ${movimentacoes}">
+                    <td th:text="${#temporals.format(m.dataHora, 'dd/MM/yyyy HH:mm')}">01/01/2026 10:00</td>
+                    <td th:text="${m.equipamento.nome}">Equipamento</td>
+                    <td>
+                        <span class="badge"
+                              th:classappend="${m.tipo.name() == 'ENTRADA'} ? 'badge-entrada' : 'badge-saida'"
+                              th:text="${m.tipo}">ENTRADA</span>
+                    </td>
+                    <td class="num" th:text="${m.quantidade}">1</td>
+                    <td th:text="${m.observacaoEvento != null} ? ${m.observacaoEvento} : '-'">obs</td>
+                    <td th:text="${m.usuario.nome}">Técnico</td>
+                </tr>
+                <tr th:if="${#lists.isEmpty(movimentacoes)}">
+                    <td colspan="6" class="vazio">Nenhuma movimentação registrada.</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+</main>
+</body>
+</html>

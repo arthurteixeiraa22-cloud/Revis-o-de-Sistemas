@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Equipamento - ArenaXP</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<header th:replace="~{fragments :: cabecalho('equipamentos')}"></header>
+
+<main class="container">
+    <h1 th:text="${equipamento.id == null} ? 'Novo equipamento' : 'Editar equipamento'">Equipamento</h1>
+
+    <form th:action="@{/equipamentos/salvar}" th:object="${equipamento}" method="post" class="card" novalidate>
+        <input type="hidden" th:field="*{id}">
+
+        <div class="form-grid">
+            <div>
+                <label for="codigoPatrimonio">Código de patrimônio *</label>
+                <input type="text" id="codigoPatrimonio" th:field="*{codigoPatrimonio}" maxlength="30" placeholder="AXP-MSE-002">
+                <small class="erro-campo" th:if="${#fields.hasErrors('codigoPatrimonio')}" th:errors="*{codigoPatrimonio}">erro</small>
+            </div>
+            <div>
+                <label for="nome">Nome *</label>
+                <input type="text" id="nome" th:field="*{nome}" maxlength="120">
+                <small class="erro-campo" th:if="${#fields.hasErrors('nome')}" th:errors="*{nome}">erro</small>
+            </div>
+            <div>
+                <label for="categoria">Categoria *</label>
+                <select id="categoria" th:field="*{categoria}">
+                    <option value="">Selecione...</option>
+                    <option th:each="c : ${categorias}" th:value="${c}" th:text="${c}">Categoria</option>
+                </select>
+                <small class="erro-campo" th:if="${#fields.hasErrors('categoria')}" th:errors="*{categoria}">erro</small>
+            </div>
+            <div>
+                <label for="especificacaoTecnica">Especificação técnica *</label>
+                <input type="text" id="especificacaoTecnica" th:field="*{especificacaoTecnica}" maxlength="255"
+                       placeholder="Ex.: 8000Hz Wireless, Switch Red">
+                <small class="erro-campo" th:if="${#fields.hasErrors('especificacaoTecnica')}" th:errors="*{especificacaoTecnica}">erro</small>
+            </div>
+            <div>
+                <label for="quantidadeAtual">Quantidade atual *</label>
+                <input type="number" id="quantidadeAtual" th:field="*{quantidadeAtual}" min="0">
+                <small class="erro-campo" th:if="${#fields.hasErrors('quantidadeAtual')}" th:errors="*{quantidadeAtual}">erro</small>
+            </div>
+            <div>
+                <label for="estoqueMinimo">Estoque mínimo *</label>
+                <input type="number" id="estoqueMinimo" th:field="*{estoqueMinimo}" min="0">
+                <small class="erro-campo" th:if="${#fields.hasErrors('estoqueMinimo')}" th:errors="*{estoqueMinimo}">erro</small>
+            </div>
+        </div>
+
+        <div class="acoes">
+            <button type="submit" class="btn">Salvar</button>
+            <a th:href="@{/equipamentos}" class="btn btn-sec">Cancelar</a>
+        </div>
+    </form>
+</main>
+</body>
+</html>
