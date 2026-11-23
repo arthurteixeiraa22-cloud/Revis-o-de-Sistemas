@@ -170,5 +170,5 @@ O relatório com os 15 casos de teste e as evidências em tela está em [`04_Tes
 
 ## Autor
 
-**Guilherme Felberque Eucaristico**
+**Arthur Martins Teixeira Coragem**
 Técnico em Desenvolvimento de Sistemas, SENAI.
